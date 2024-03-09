@@ -30,11 +30,9 @@ public class Plugin : BasePlugin
             {
                 Logger.LogError(key);
             }
-        });
 
-        // Task.Run(async () => {
-            var server = new HttpServer();
+            var server = new HttpServer(Configs);
             server.Run();
-        // });
+        });
     }
 }

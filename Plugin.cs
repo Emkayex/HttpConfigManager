@@ -5,6 +5,7 @@ using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 using HttpConfigManager.ConfigDiscovery;
+using HttpConfigManager.Server;
 
 namespace HttpConfigManager;
 
@@ -30,5 +31,10 @@ public class Plugin : BasePlugin
                 Logger.LogError(key);
             }
         });
+
+        // Task.Run(async () => {
+            var server = new HttpServer();
+            server.Run();
+        // });
     }
 }

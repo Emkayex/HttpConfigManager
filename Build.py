@@ -9,6 +9,8 @@ def build(dst_folder: Path) -> None:
     BIN_PATH = Path(__file__).parent.joinpath("bin", "Debug", "net6.0")
     FILES_TO_BUNDLE = [
         BIN_PATH.joinpath("HttpConfigManager.dll"),
+        BIN_PATH.joinpath("EmbedIO.dll"),
+        BIN_PATH.joinpath("Swan.Lite.dll"),
     ]
     dst_folder.mkdir(parents = True, exist_ok = True)
 

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
+using HttpConfigManager.ConfigDiscovery;
 
 namespace HttpConfigManager;
 
@@ -13,6 +14,8 @@ public class Plugin : BasePlugin
     internal static new ManualLogSource Log;
     public static ManualLogSource Logger { get => Log; }
 
+    private readonly static ConfigCollection Configs = new();
+
     public override void Load()
     {
         // Create a global logger for use by other classes
@@ -20,27 +23,12 @@ public class Plugin : BasePlugin
 
         Task.Run(async () => {
             await Task.Delay(5000);
-            foreach (var configEntryInfo in FindConfigEntryInfos())
+            Configs.RefreshConfigEntryInfos();
+
+            foreach (var key in Configs.Keys)
             {
-                Logger.LogWarning(configEntryInfo);
+                Logger.LogError(key);
             }
         });
-    }
-
-    private static IEnumerable<ConfigEntryInfo> FindConfigEntryInfos()
-    {
-        var pluginInfos = IL2CPPChainloader.Instance.Plugins.Values.Where(x => x.Instance is BasePlugin).ToList();
-        foreach (var pluginInfo in pluginInfos)
-        {
-            var basePlugin = (BasePlugin)pluginInfo.Instance;
-            if (basePlugin is not null)
-            {
-                foreach (var (key, value) in basePlugin.Config)
-                {
-                    var info = new ConfigEntryInfo(key, value, pluginInfo);
-                    yield return info;
-                }
-            }
-        }
     }
 }

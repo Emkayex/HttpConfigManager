@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using EmbedIO;
 using EmbedIO.Actions;
@@ -7,6 +8,8 @@ using HttpConfigManager.ConfigDiscovery;
 namespace HttpConfigManager.Server;
 public class HttpServer
 {
+    private const string HtmlContentType = "text/html";
+
     private readonly WebServer Server;
 
     public HttpServer(ConfigCollection collection)
@@ -18,7 +21,7 @@ public class HttpServer
 
         server.WithLocalSessionManager()
             .WithModule(new ActionModule("/", HttpVerbs.Any, ctx => {
-                return ctx.SendDataAsync(collection.Keys.ToList());
+                return ctx.SendStringAsync(HtmlGenerator.GetIndex(collection), HtmlContentType, Encoding.UTF8);
             }));
 
         Server = server;

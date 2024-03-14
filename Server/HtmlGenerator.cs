@@ -54,7 +54,7 @@ public static class HtmlGenerator
         var html = @$"
 {GetHtmlPre()}
     {string.Join("\n    ", GetHtmlHead(title, scripts).SplitLines())}
-    {string.Join("\n    ", GetHtmlBody(bodySnippets))}
+    {string.Join("\n    ", GetHtmlBody(bodySnippets).SplitLines())}
 {GetHtmlPost()}
 ";
 

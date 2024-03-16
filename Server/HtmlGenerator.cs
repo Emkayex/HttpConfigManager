@@ -32,15 +32,32 @@ public static class HtmlGenerator
                 var cfgsInSection = cfgsInMod.Where(kv => kv.Key.SectionName == section).OrderBy(kv => kv.Key.OptionName);
                 foreach (var (configEntryKey, entryInfo) in cfgsInSection)
                 {
-                    // Generate an HTML snippet for this option
-                    var optionHeader = $"<h3>{configEntryKey.OptionName}</h3>";
-                    htmlSnippets.Add(optionHeader);
+                    // Generate a unique name for this option
+                    // TODO: Make a meaningful name rather than a UUID
+                    var name = Guid.NewGuid().ToString();
 
-                    var description = $"<p>{entryInfo.Entry.Description.Description}</p>";
-                    htmlSnippets.Add(description);
+                    // Generate a form for this option
+                    htmlSnippets.Add($"<form action=\"/api/update-option\" method=\"post\">");
+                    htmlSnippets.Add("<ul>");
+                    htmlSnippets.Add("<li>");
+                    htmlSnippets.Add($"<label for=\"{name}\">{configEntryKey.OptionName}:</label>");
+                    htmlSnippets.Add($"<input type=\"text\" id=\"{name}\" name=\"{configEntryKey.OptionName}\" value=\"{entryInfo.Entry.BoxedValue}\" />");
+                    htmlSnippets.Add("</li>");
+                    htmlSnippets.Add("<li class=\"button\">");
+                    htmlSnippets.Add("<button type=\"submit\">Submit</button>");
+                    htmlSnippets.Add("</li>");
+                    htmlSnippets.Add("</ul>");
+                    htmlSnippets.Add("</form>");
 
-                    var value = $"<p>{entryInfo.Entry.BoxedValue}</p>";
-                    htmlSnippets.Add(value);
+                    // // Generate an HTML snippet for this option
+                    // var optionHeader = $"<h3>{configEntryKey.OptionName}</h3>";
+                    // htmlSnippets.Add(optionHeader);
+
+                    // var description = $"<p>{entryInfo.Entry.Description.Description}</p>";
+                    // htmlSnippets.Add(description);
+
+                    // var value = $"<p>{entryInfo.Entry.BoxedValue}</p>";
+                    // htmlSnippets.Add(value);
                 }
             }
         }

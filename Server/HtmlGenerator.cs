@@ -6,6 +6,8 @@ using HttpConfigManager.ConfigDiscovery;
 namespace HttpConfigManager.Server;
 public static class HtmlGenerator
 {
+    public const string ModSectionOptionSeparator = "___";
+
     public static string GetIndex(ConfigCollection cfgs)
     {
         var htmlSnippets = new List<string>();
@@ -33,15 +35,15 @@ public static class HtmlGenerator
                 foreach (var (configEntryKey, entryInfo) in cfgsInSection)
                 {
                     // Generate a unique name for this option
-                    // TODO: Make a meaningful name rather than a UUID
-                    var name = Guid.NewGuid().ToString();
+                    var option = configEntryKey.OptionName;
+                    var name = $"{mod}{ModSectionOptionSeparator}{section}{ModSectionOptionSeparator}{option}";
 
                     // Generate a form for this option
-                    htmlSnippets.Add($"<form action=\"/api/update-option\" method=\"post\">");
+                    htmlSnippets.Add($"<form action=\"/api/update-option\" method=\"post\" target=\"/\">");
                     htmlSnippets.Add("<ul>");
                     htmlSnippets.Add("<li>");
                     htmlSnippets.Add($"<label for=\"{name}\">{configEntryKey.OptionName}:</label>");
-                    htmlSnippets.Add($"<input type=\"text\" id=\"{name}\" name=\"{configEntryKey.OptionName}\" value=\"{entryInfo.Entry.BoxedValue}\" />");
+                    htmlSnippets.Add($"<input type=\"text\" id=\"{name}\" name=\"{name}\" value=\"{entryInfo.Entry.BoxedValue}\" />");
                     htmlSnippets.Add("</li>");
                     htmlSnippets.Add("<li class=\"button\">");
                     htmlSnippets.Add("<button type=\"submit\">Submit</button>");
